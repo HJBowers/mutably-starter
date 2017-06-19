@@ -11,11 +11,18 @@
   <body class="container">
     <div class="col-sm-8 col-sm-offset-2">
       <nav class="navbar navbar-default">
-        <a class="navbar-brand" href="/">Mutably Front-end</a>
+        <a class="navbar-brand" href="/">Pokédex!</a>
       </nav>
       <div class="panel panel-default">
-        <div class="panel-heading">Welcome to your Pokedex!</div>
-        <button id="getAllPokemon">Show Pokemon!</button>
+        <div class="panel-heading">Welcome to your Pokédex!</div>
+        <button id="getAllPokemon">Show All Pokémon!</button>
+        <button class="addNewPoke-btn">Add New Pokémon!</button>
+        <form id='addPokeForm' class="form-inline" hidden>
+          <strong>Pokémon Name: </strong><input type='text' id='name-input'></input><br>
+          <strong>Pokédex Number: </strong><input type='text' id='pokeNumber-input'></input><br>
+          <strong>Evolves From: </strong><input type='text' id='evolves_from-input'></input><br></br>
+          <button type="submit" class="saveNewPoke-btn" >Save New Pokémon</button>
+        </form>
         <ul class="list-group">
           <!-- your resource items here -->
         </ul>
