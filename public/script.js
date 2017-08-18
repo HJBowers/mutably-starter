@@ -1,5 +1,4 @@
 console.log("Sanity Check: JS is working!");
-
 $(document).ready(function(){
 
   getAllBooks()
@@ -14,35 +13,56 @@ $(document).ready(function(){
   })
 
   // Delete
-  $(this).on('click', '.delete-btn', function() {
+  $(document).on('click', '.delete-btn', function() {
+    var id = $(this).data('id')
+    var url = "https://mutably.herokuapp.com/books/" + id
 
+    confirm("Are you sure you want to permanently delete this book?")
+
+    $(".book-" +id).remove()
+
+    $.ajax({
+      url: url,
+      type: 'DELETE',
+      success: console.log("Success delete for book ID: " +id),
+      data: id
+    })
   })
 
   // Edit
-  $(this).on('click', '.edit-btn', function() {
-    $(this).hide()
-    $('.save-btn').show()
+  $(document).on('click', '.edit-btn', function() {
+    var id = $(this).data('id')
 
+    $('.input-' +id).show()
+    $('.book-title-' +id).hide()
+
+    $('.btn-edit-' +id).hide()
+    $('.btn-save-' +id).show()
   })
 
   // Save
-  $(this).on('click', '.save-btn', function() {
-    $(this).hide()
-    $('.edit-btn').show()
+  $(document).on('click', '.save-btn', function() {
+    var id = $(this).data('id')
+    var url = "https://mutably.herokuapp.com/books/" + id
+    var updatedTitle = $('.input-'+id+' input').val()
+
+    $('.input-' +id).hide()
+    $('.book-title-' +id).replaceWith(updatedTitle)
+
+    $('.btn-save-' +id).hide()
+    $('.btn-edit-' +id).show()
+
+    $.ajax({
+      url: url,
+      type: 'PUT',
+      data: {title: updatedTitle}
+    })
   })
 
 })
 
 // Clear form and re-fetch data
 function refreshBookList() {
-  $('.list-group-book').remove()
-  getAllBooks()
-  $('form').find("input[type=text], textarea").val("");
-}
-
-// When Edit button is clicked
-function clickEditBtn() {
-  var id = data._id
   $('.list-group-book').remove()
   getAllBooks()
   $('form').find("input[type=text], textarea").val("");
@@ -56,13 +76,14 @@ function getAllBooks() {
     for (var i = 0; i < books.length; i++) {
       $('.list-group').append(
         '<ul class="list-group-book book-'+books[i]._id+'">'
-        +'<button class="btn edit-btn btn-primary btn-edit-' + books[i]._id + '">Edit</button>'
-        +'<button class="btn save-btn btn-success btn-save-' + books[i]._id + '">Save</button>'
-        +'<span class="book-'+books[i]._id+'">&nbsp' + books[i].title + '&nbsp</span>'
-        // +'<span class="form-inline edit-form input-'+data.books[i]._id+'">&nbsp;<input class="form-control" value="'+data.books[i].title+'"/></span>'
-        +'<button class="btn delete-btn btn-danger pull-right btn-delete-' + books[i]._id + '">Delete</button>'
+        +'<button class="btn edit-btn btn-primary btn-edit-' + books[i]._id + '" data-id="'+data.books[i]._id+'">Edit</button>'
+        +'<button class="btn save-btn btn-success btn-save-' + books[i]._id + '" data-id="'+data.books[i]._id+'">Save</button>'
+        +'<span class="book-title-'+books[i]._id+'" data-id="'+data.books[i]._id+'">&nbsp' + books[i].title + '&nbsp</span>'
+        +'<span class="form-inline edit-form input-'+data.books[i]._id+'" data-id="'+data.books[i]._id+'">&nbsp;<input class="form-control" value="'+data.books[i].title+'"/></span>'
+        +'<button class="btn delete-btn btn-danger pull-right btn-delete-' + books[i]._id + '" data-id="'+data.books[i]._id+'">Delete</button>'
         +'</ul>'
       )
+      $('.input-'+books[i]._id).hide()
       $('.save-btn').hide()
     }
   })
